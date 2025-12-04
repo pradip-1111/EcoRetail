@@ -1,9 +1,17 @@
-// next.config.js
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['placehold.co'], // ✅ Add the domain of your image
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "firebasestorage.googleapis.com",
+      },
+      {
+        protocol: "https",
+        hostname: "ecoretail-a6a51.firebasestorage.app",
+      },
+    ],
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

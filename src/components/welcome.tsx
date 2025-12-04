@@ -44,17 +44,17 @@ const howItWorks = [
 
 const carouselImages = [
     {
-        src: "/sustain2.jpg",
+        src: "/assets/sustain2.jpg",
         alt: "A hand holding a digital recycling symbol, representing technology and sustainability.",
         hint: "recycling technology"
     },
     {
-        src: "/sustain3.jpg",
+        src: "/assets/sustain3.jpg",
         alt: "A retail store with green signage and plants, indicating an eco-friendly business.",
         hint: "eco-friendly retail"
     },
     {
-        src: "/sustain4.jpg",
+        src: "/assets/sustain4.jpg",
         alt: "A futuristic dashboard showing graphs and data related to sustainability metrics.",
         hint: "sustainability dashboard"
     }
