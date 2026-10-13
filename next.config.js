@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+import path from 'path';
 const nextConfig = {
   images: {
     remotePatterns: [
@@ -11,6 +12,10 @@ const nextConfig = {
         hostname: "ecoretail-a6a51.firebasestorage.app",
       },
     ],
+  },
+  webpack: (config) => {
+    config.resolve.alias['@'] = path.resolve(process.cwd(), 'src');
+    return config;
   },
 };
 

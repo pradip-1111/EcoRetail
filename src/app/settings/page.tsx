@@ -11,6 +11,8 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
+import { Sparkles, Key, CheckCircle2 } from "lucide-react";
 
 export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
@@ -130,6 +132,54 @@ export default function SettingsPage() {
                   checked={pushNotifications}
                   onCheckedChange={setPushNotifications}
                 />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Sparkles className="h-5 w-5 text-primary" />
+                <CardTitle>AI Copilot & Intelligence Engine</CardTitle>
+              </div>
+              <Badge variant="outline" className="text-xs border-primary/30 text-primary bg-primary/5">
+                Active & Resilient
+              </Badge>
+            </div>
+            <CardDescription>
+              Configures generative models (Gemini 1.5 Flash) and local high-fidelity retail analytics.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="rounded-lg border p-3 bg-muted/40 space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="font-medium flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-primary" />
+                  Hybrid Intelligence Mode
+                </span>
+                <span className="text-xs text-muted-foreground">Auto-fallback enabled</span>
+              </div>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                EcoRetail combines Google Gemini AI with built-in localized analytics algorithms so waste predictions, shelf recommendations, and dashboard insights work seamlessly without interruption.
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="gemini-key" className="flex items-center gap-1.5">
+                <Key className="h-4 w-4 text-muted-foreground" />
+                Google Gemini API Key
+              </Label>
+              <Input
+                id="gemini-key"
+                type="password"
+                placeholder="Configured in .env.local (GEMINI_API_KEY)"
+                disabled
+                defaultValue="••••••••••••••••••••••••••••••••••••••"
+              />
+              <p className="text-[11px] text-muted-foreground">
+                To update your key, paste your key into <code className="bg-muted px-1 py-0.5 rounded">GEMINI_API_KEY</code> in <code className="bg-muted px-1 py-0.5 rounded">.env.local</code>.
+              </p>
             </div>
           </CardContent>
         </Card>

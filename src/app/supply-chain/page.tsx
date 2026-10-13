@@ -11,7 +11,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Loader2, Terminal, Lightbulb, Truck } from "lucide-react";
+import { Loader2, Terminal, Lightbulb, Truck, Sparkles } from "lucide-react";
+import { useProducts } from "@/contexts/products-context";
 
 const formSchema = z.object({
   productName: z.string().min(2, { message: "Product name must be at least 2 characters." }),
@@ -21,6 +22,7 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 export default function ShelfPlacementPage() {
+  const { products } = useProducts();
   const [suggestion, setSuggestion] = useState<SuggestShelfPlacementOutput | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -32,6 +34,13 @@ export default function ShelfPlacementPage() {
       currentShelfPlacement: "",
     },
   });
+
+  const handleSelectProduct = (name: string) => {
+    form.setValue("productName", name);
+    if (!form.getValues("currentShelfPlacement")) {
+      form.setValue("currentShelfPlacement", "Aisle 2, Lower Shelf");
+    }
+  };
 
   const handleSubmit = async (data: FormValues) => {
     setIsLoading(true);
@@ -96,8 +105,29 @@ export default function ShelfPlacementPage() {
                       </FormItem>
                     )}
                   />
+                  {products.length > 0 && (
+                    <div className="space-y-2">
+                      <span className="text-xs font-medium text-muted-foreground flex items-center gap-1">
+                        <Sparkles className="h-3 w-3 text-primary" />
+                        Quick select from catalog:
+                      </span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {products.slice(0, 4).map(product => (
+                          <button
+                            key={product.id}
+                            type="button"
+                            onClick={() => handleSelectProduct(product.name)}
+                            className="text-xs px-2.5 py-1 rounded-full border bg-muted/60 hover:bg-primary/10 hover:border-primary/40 hover:text-primary transition-colors text-left"
+                          >
+                            {product.name}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   <Button type="submit" disabled={isLoading} className="w-full">
-                    {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                    {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
                     Get Suggestions
                   </Button>
                 </form>

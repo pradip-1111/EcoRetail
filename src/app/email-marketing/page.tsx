@@ -12,7 +12,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Loader2, Terminal, Mail } from "lucide-react";
+import { Loader2, Terminal, Mail, Sparkles } from "lucide-react";
+import { useProducts } from "@/contexts/products-context";
 
 const formSchema = z.object({
   productName: z.string().min(2, { message: "Product name must be at least 2 characters." }),
@@ -22,6 +23,7 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 export default function EmailMarketingPage() {
+  const { products } = useProducts();
   const [emailContent, setEmailContent] = useState<GenerateEmailOutput | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -33,6 +35,17 @@ export default function EmailMarketingPage() {
       productFeatures: "",
     },
   });
+
+  const handleSelectProduct = (product: typeof products[0]) => {
+    form.setValue("productName", product.name);
+    const features = [
+      product.labels.length > 0 ? product.labels.join(", ") : "Eco-friendly materials",
+      `Sustainability score ${product.score}/100`,
+      `${product.co2Footprint} kg CO2 footprint`,
+      product.societalImpact === "Positive" ? "Positive societal impact" : "",
+    ].filter(Boolean).join(", ");
+    form.setValue("productFeatures", features);
+  };
 
   const handleSubmit = async (data: FormValues) => {
     setIsLoading(true);
@@ -100,8 +113,29 @@ export default function EmailMarketingPage() {
                       </FormItem>
                     )}
                   />
+                  {products.length > 0 && (
+                    <div className="space-y-2">
+                      <span className="text-xs font-medium text-muted-foreground flex items-center gap-1">
+                        <Sparkles className="h-3 w-3 text-primary" />
+                        Quick fill from catalog:
+                      </span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {products.slice(0, 4).map(product => (
+                          <button
+                            key={product.id}
+                            type="button"
+                            onClick={() => handleSelectProduct(product)}
+                            className="text-xs px-2.5 py-1 rounded-full border bg-muted/60 hover:bg-primary/10 hover:border-primary/40 hover:text-primary transition-colors text-left"
+                          >
+                            {product.name}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   <Button type="submit" disabled={isLoading} className="w-full">
-                    {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                    {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
                     Generate Email
                   </Button>
                 </form>

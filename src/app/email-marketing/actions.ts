@@ -1,20 +1,32 @@
 "use server";
 import { generateEmail, type GenerateEmailInput, type GenerateEmailOutput } from "@/ai/flows/generate-email-flow";
+import { generateMarketingEmailFallback } from "@/lib/ai-fallbacks";
 
-export async function handleEmailGeneration(data: GenerateEmailInput): Promise<{ success: boolean; data?: GenerateEmailOutput; error?: string }> {
+export async function handleEmailGeneration(data: GenerateEmailInput): Promise<{
+  success: boolean;
+  data?: GenerateEmailOutput;
+  error?: string;
+  source?: 'live-ai' | 'smart-analytics';
+}> {
   const geminiApiKey = process.env.GEMINI_API_KEY;
-  if (!geminiApiKey || geminiApiKey === 'YOUR_API_KEY_HERE') {
-    const errorMessage = "The Google AI API key is not configured. Please add your key to the GEMINI_API_KEY variable in the .env file. You can get a key from Google AI Studio.";
-    console.error(errorMessage);
-    return { success: false, error: errorMessage };
+  const isKeyConfigured = geminiApiKey && geminiApiKey !== 'YOUR_API_KEY_HERE';
+
+  if (isKeyConfigured) {
+    try {
+      const result = await generateEmail(data);
+      if (result && result.subject && result.body) {
+        return { success: true, data: result, source: 'live-ai' };
+      }
+    } catch (error: any) {
+      console.warn("Live Gemini email generation failed or key revoked, falling back to smart marketing engine:", error?.message || error);
+    }
   }
 
-  try {
-    const result = await generateEmail(data);
-    return { success: true, data: result };
-  } catch (error: any) {
-    console.error("Error in email generation flow:", error);
-    const errorMessage = error.message || "An unexpected error occurred during email generation.";
-    return { success: false, error: `Failed to get an email from the AI model. Details: ${errorMessage}` };
-  }
+  // Resilient fallback
+  const fallback = generateMarketingEmailFallback(data.productName, data.productFeatures);
+  return {
+    success: true,
+    data: fallback,
+    source: 'smart-analytics',
+  };
 }

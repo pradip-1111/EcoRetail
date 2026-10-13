@@ -1,0 +1,58 @@
+/* src/styles/dashboard.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Pastel palette */
+  --c-primary: #a2d5c6;   /* mint */
+  --c-secondary: #ffb5a7; /* peach */
+  --c-accent: #c5a3ff;    /* lavender */
+  --c-bg: #f7f9fc;        /* very light gray‑blue */
+  --c-card-bg: rgba(255,255,255,.8);
+  --c-text: #2d3748;
+}
+
+html, body {
+  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--c-text);
+  background: linear-gradient(135deg, #fff, var(--c-bg));
+}
+
+/* Glass‑morphism cards */
+.pastel-card {
+  background: var(--c-card-bg);
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,.08);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(0,0,0,.05);
+  padding: 1.5rem;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.pastel-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,.07);
+}
+
+.dashboard-stats {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.pastel-btn {
+  background-color: var(--c-accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: .5rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s ease;
+}
+.pastel-btn:hover { background-color: #b392ff; }
+
+.chart-container {
+  background: var(--c-card-bg);
+  border-radius: 12px;
+  padding: 1rem;
+}
